@@ -54,7 +54,7 @@ def get_loader(df, phase, cfg):
     
     return DataLoader(
         dataset,
-        batch_size=1,
+        batch_size=2,
         shuffle=True if phase == "train" else False,
         num_workers=0,
         drop_last=True if phase == "train" else False,
@@ -73,7 +73,7 @@ def get_model(cfg):
     )
 
 
-    # U-Net with efficientnet- b1
+    # U-Net with efficientnet-b1
     net = smp.Unet(
     encoder_name="efficientnet-b1",      # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights="imagenet",     # use `imagenet` pre-trained weights for encoder initialization
