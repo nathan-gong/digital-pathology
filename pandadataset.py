@@ -21,16 +21,16 @@ import os
 
 
 class PANDADataset(Dataset):
-    def __init__(self, df, cfg_image, phase, transform):
+    def __init__(self, df, cfg, phase, transform):
 
         assert phase in {"train", "valid"}
         
         self.df = df
         self.transform = transform
-        self.cfg_imgae = cfg_image
-        self.img_dir = '/Users/chuhsuanlin/Documents/NEU/Course/Fall 2022/BIOE 5860 Precision Medicine/Data/tile_images/'
-        self.num_tile = 16
-        self.img_size = 256
+        self.cfg_imgae = cfg.dataset
+        self.img_dir = './Data/tile_images/'
+        self.num_tile = cfg.dataset.num_tile
+        self.tile_size = cfg.dataset.tile_size
         self.phase = phase
         self.labels = self.df["isup_grade"]
         
@@ -114,7 +114,7 @@ class PANDADataset(Dataset):
         
     def __getitem__(self, index): 
 
-        print(index)
+        #print(index)
         # get tiles
         img = self.get_image(index)
         img = self.img_preprocess(img)
