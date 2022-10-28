@@ -1,0 +1,11 @@
+,Unnamed: 0,image_id,data_provider,isup_grade,gleason_score,kfold
+0,0,0005f7aaab2800f6170c399693a96917,karolinska,0,0+0,1.0
+1,1,000920ad0b612851f8e01bcc880d9b3d,karolinska,0,0+0,2.0
+2,2,0018ae58b01bdadc8e347995b69f99aa,radboud,4,4+4,2.0
+3,3,001c62abd11fa4b57bf7a6c603a11bb9,karolinska,4,4+4,1.0
+4,4,001d865e65ef5d2579c190a0e0350d8f,karolinska,0,0+0,1.0
+5,5,002a4db09dad406c85505a00fb6f6144,karolinska,0,0+0,2.0
+6,6,003046e27c8ead3e3db155780dc5498e,karolinska,1,3+3,1.0
+7,7,0032bfa835ce0f43a92ae0bbab6871cb,karolinska,1,3+3,2.0
+8,8,003a91841da04a5a31f808fb5c21538a,karolinska,1,3+3,1.0
+9,9,003d4dd6bd61221ebc0bfb9350db333f,karolinska,1,3+3,2.0

@@ -86,13 +86,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-size', type=int, default = 256)
     parser.add_argument('-num', type=int, default = 16)
-    parser.add_argument('-path', type=str, default = './work/digital_pathology/')
+    parser.add_argument('-path', type=str, default = './Data')
     args = parser.parse_args()       
     
     tile_size = (args.size, args.size)
     tile_num = args.num
     global PATH
-    PATH = '/Users/chuhsuanlin/Documents/NEU/Course/Fall 2022/BIOE 5860 Precision Medicine/Data/' #args.path
+    PATH = args.path
     
     all_train_images = os.listdir(os.path.join(PATH,"train_images/"))
     train_df = pd.read_csv(os.path.join(PATH,'train.csv'))
