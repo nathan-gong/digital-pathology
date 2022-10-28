@@ -38,6 +38,7 @@ Data:
     dataloader:
         batch_size: 6
         num_workers: 4
+        epoch: 100
 
 Model:
     base: efficientnet-b1

@@ -29,8 +29,9 @@ class PANDADataset(Dataset):
         self.transform = transform
         self.cfg_imgae = cfg.dataset
         self.img_dir = './Data/tile_images/'
-        self.num_tile = cfg.dataset.num_tile
-        self.tile_size = cfg.dataset.tile_size
+        self.num_tile = cfg.Data.dataset.num_tile
+        self.tile_size = cfg.Data.dataset.tile_size
+        self.img_size = cfg.Data.dataset.img_size
         self.phase = phase
         self.labels = self.df["isup_grade"]
         
@@ -50,9 +51,12 @@ class PANDADataset(Dataset):
     
     def get_normal_tile(self, idx):
         file_name = self.df["image_id"].values[idx]
+        
         paths = [
             os.path.join(self.img_dir, f"{file_name}_{idx}.jpg") for idx in range(self.num_tile)
         ]
+        #print(idx, paths)
+        
         return self.get_tile_from_paths(paths)
     
     

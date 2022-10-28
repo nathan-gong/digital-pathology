@@ -65,7 +65,7 @@ model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-6)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 log_interval = 5
-epoch = cfg.General.epoch
+epoch = cfg.Data.dataloader.epoch
 
 for k in range(1,k_fold):
     train_df = df.loc[df['kfold']==k].reset_index(drop=True)

@@ -45,7 +45,7 @@ def get_loader(df, phase, cfg):
     transforms = transform(phase, cfg)
     dataset = PANDADataset(
         df = df, 
-        cfg_image = cfg, 
+        cfg = cfg, 
         phase = phase, 
         transform = transforms)
         
