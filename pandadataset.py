@@ -28,10 +28,11 @@ class PANDADataset(Dataset):
         self.df = df
         self.transform = transform
         self.cfg_imgae = cfg.dataset
-        self.img_dir = './Data/tile_images/'
+        
         self.num_tile = cfg.Data.dataset.num_tile
         self.tile_size = cfg.Data.dataset.tile_size
         self.img_size = cfg.Data.dataset.img_size
+        self.img_dir = f'/work/digital-pathology/dataset/tile-images-{self.num_tile}-{self.tile_size}'
         self.phase = phase
         self.labels = self.df["isup_grade"]
         

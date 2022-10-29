@@ -14,8 +14,8 @@ General:
 
 Data:
     dataset:
-        train_df: ../input/train-5kfold.csv
-        kfold: 2
+        train_df: ./Data/train-5fold.csv
+        kfold: 5
         tile_option: normal
         random_tile_train: True
         random_rotate_tile: False
@@ -43,7 +43,7 @@ Data:
 Model:
     base: efficientnet-b1
     in_channel: 3
-    out_channel: 10
+    out_channel: 6
     pretrained: True
     pool_type: gem
 

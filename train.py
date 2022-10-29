@@ -21,7 +21,8 @@ from trainer import get_loader, get_model, get_loss
 from general import read_yaml
 
 
-PATH = './Data/' #args.path
+PATH = '/work/digital-pathology/dataset/' #args.path
+yaml_name = 'sample.yaml'  
 
 '''
 train_images=[]
@@ -30,11 +31,14 @@ for img_name in all_train_images:
     if img_name[-4:] == "tiff":
         train_images.append(img_name[:-5]) 
 '''     
-yaml_name = 'sample'  
-cfg = read_yaml()     
+
+cfg = read_yaml(yaml_name)     
 k_fold = cfg.Data.dataset.kfold   
-tiles = os.listdir(os.path.join(PATH,"tile_images/"))
-df = pd.read_csv(os.path.join(PATH,f'train-{k_fold}fold.csv'))
+tile_size = cfg.Data.dataset.tile_size
+tile_num = cfg.Data.dataset.num_tile
+    
+tiles = os.listdir(os.path.join(PATH,f"tile-images-{tile_num}-{tile_size}/"))
+df = pd.read_csv(cfg.Data.dataset.train_df)
 
 '''
 train_df = pd.read_csv(os.path.join(PATH,'train.csv'))

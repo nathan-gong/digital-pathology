@@ -29,7 +29,7 @@ def k_fold(train_df, n_splits, path):
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('-path', type=str, default = './Data')
+    parser.add_argument('-path', type=str, default = '/work/digital-pathology/dataset/')
     parser.add_argument('-k', type=int, default = 5)
     parser.add_argument('-file', type=str, default ='train')
     

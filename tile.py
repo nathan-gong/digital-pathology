@@ -99,7 +99,7 @@ def main():
     
     all_train_images = os.listdir(os.path.join(PATH,"train_images/"))
     train_df = pd.read_csv(os.path.join(PATH,'train.csv'))
-    SAVE_DIR = os.path.join(PATH,f"tile_images_{tile_num}_{args.size}/")
+    SAVE_DIR = os.path.join(PATH,f"tile-images-{tile_num}-{args.size}/")
     is_Exist = os.path.exists(SAVE_DIR)
     if not is_Exist:
         os.makedirs(SAVE_DIR)

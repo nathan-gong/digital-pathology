@@ -6,12 +6,13 @@ Created on Sun Oct 23 20:38:41 2022
 @author: chuhsuanlin
 """
 
-
+import os
 import yaml
 from addict import Dict
 
 def read_yaml(fpath="./configs/sample.yaml"):
   
+    fpath = os.path.join("./configs",fpath)
     with open(fpath, mode="r") as file:
         yml = yaml.load(file, Loader=yaml.Loader)
         return Dict(yml)
