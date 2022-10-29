@@ -52,6 +52,10 @@ df_test.to_csv('../Data/new_train.csv')
 #model.to(device)  
 
 output_path = './output'
+is_Exist = os.path.exists(output_path)
+if not is_Exist:
+    os.makedirs(output_path)
+        
 model_name = cfg.Model.base
 
 log_interval = 5

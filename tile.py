@@ -54,7 +54,8 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
             
     
     selected_img = np.argsort(sum_array)
-    fig = plt.figure()
+    if plot:
+        fig = plt.figure()
     
     
     TILE_DIR = os.path.join(SAVE_DIR, img_name[:-5])
@@ -72,10 +73,12 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
         cv2.imwrite(tile_path, img_patch)
         
          
-    if plot:
-        ax = fig.add_subplot(s, s, i+1)  
-        ax.imshow(img_patch)
-        plt.axis('off')  
+        if plot:
+            ax = fig.add_subplot(s, s, i+1)  
+            ax.imshow(img_patch)
+            plt.axis('off')  
+        
+    img.close()
     
     
         
@@ -86,7 +89,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-size', type=int, default = 256)
     parser.add_argument('-num', type=int, default = 16)
-    parser.add_argument('-path', type=str, default = './Data')
+    parser.add_argument('-path', type=str, default = '/work/digital-pathology/dataset/')
     args = parser.parse_args()       
     
     tile_size = (args.size, args.size)
@@ -96,7 +99,7 @@ def main():
     
     all_train_images = os.listdir(os.path.join(PATH,"train_images/"))
     train_df = pd.read_csv(os.path.join(PATH,'train.csv'))
-    SAVE_DIR = os.path.join(PATH,"tile_images/")
+    SAVE_DIR = os.path.join(PATH,f"tile_images_{tile_num}_{args.size}/")
     is_Exist = os.path.exists(SAVE_DIR)
     if not is_Exist:
         os.makedirs(SAVE_DIR)

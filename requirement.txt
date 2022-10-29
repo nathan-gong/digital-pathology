@@ -1,14 +1,11 @@
 opencv-python
 openslide-python
-
 matplotlib
-torch
-torchvision
 torchsummary
 scikit-learn
 albumentations
 segmentation_models_pytorch
-torchaudio 
+addict
 
 
-conda install -c conda-forge openslide
+
