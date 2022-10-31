@@ -6,6 +6,8 @@ Created on Sat Oct 29 01:00:30 2022
 @author: chuhsuanlin
 """
 
+import logging
+from datetime import datetime
 import os
 import cv2
 import skimage.io
@@ -19,6 +21,15 @@ OUT_TRAIN = 'train.zip'
 OUT_MASKS = 'masks.zip'
 sz = 128
 N = 16
+
+# set up logging
+logging.basicConfig(
+    filename='log.txt',
+    filemode='w',
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt=datetime.utcnow().astimezone().replace(
+        microsecond=0).isoformat(),
+    level=logging.DEBUG)
 
 def tile(img, mask):
     result = []
@@ -48,7 +59,7 @@ names = [name[:-10] for name in os.listdir(MASKS)]
 with zipfile.ZipFile(OUT_TRAIN, 'w') as img_out,\
  zipfile.ZipFile(OUT_MASKS, 'w') as mask_out:
     for name in (names):
-        print(name)
+        logging.debug(name)
         img = skimage.io.MultiImage(os.path.join(TRAIN,name+'.tiff'))[-1]
         mask = skimage.io.MultiImage(os.path.join(MASKS,name+'_mask.tiff'))[-1]
         tiles = tile(img,mask)
