@@ -9,6 +9,7 @@ Created on Fri Oct 21 16:39:48 2022
 
 import os
 import cv2
+import logging
 #import PIL
 #import random
 
@@ -23,6 +24,15 @@ import openslide
 from glob import glob
 import sys
 import argparse
+
+# set up logging
+logging.basicConfig(
+    filename='log.txt',
+    filemode='w',
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt=datetime.utcnow().astimezone().replace(
+        microsecond=0).isoformat(),
+    level=logging.DEBUG)
 
 
 def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
@@ -81,8 +91,10 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
     img.close()
     
     
-        
-                    
+def get_image_start_idx():
+    with open('log.txt') as f:
+        data = f.read().splitlines()
+        return data[:-1].split('-')[0].strip() if data else 0                    
                     
 def main():
     
@@ -110,8 +122,13 @@ def main():
     if s-int(s) !=0:
         sys.exit(f'tile number must be square number') 
     
-    for img_name in all_train_images:
+    for idx, img_name in enumerate(all_train_images):
+        image_start_idx = get_image_start_idx()
+        if idx <= image_start_idx:
+            pass
+
         if img_name[-4:] == "tiff":
+            logging.debug(idx, img_name)
                     
             tile(tile_size,tile_num,img_name,SAVE_DIR)
 
