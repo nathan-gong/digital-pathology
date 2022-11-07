@@ -14,7 +14,7 @@ General:
 
 Data:
     dataset:
-        train_df: ./Data/train-5fold.csv
+        train_df: /work/digital-pathology/dataset/train-5fold.csv
         kfold: 5
         tile_option: normal
         random_tile_train: True
@@ -38,7 +38,7 @@ Data:
     dataloader:
         batch_size: 6
         num_workers: 4
-        epoch: 100
+        epoch: 30
 
 Model:
     base: efficientnet-b1

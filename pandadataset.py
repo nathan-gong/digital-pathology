@@ -13,8 +13,6 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-
-
 from torch.utils.data import Dataset, DataLoader
 import torch
 import os
@@ -87,13 +85,32 @@ class PANDADataset(Dataset):
                         
         return images
     
+    def tile_augumentation(self, tiles):
+        
+        # for rotation
+        if np.random.rand() > 0.5:
+            for i, tile in enumerate(tiles):
+                rotate_indx = np.random.randint(0,3)
+                tiles[i] = cv2.rotate(tile, rotate_indx)
+                
+        # for flip
+        if np.random.rand() > 0.5:
+            for i, tile in enumerate(tiles):
+                flip_indx = np.random.randint(0,1)
+                tiles[i] = cv2.flip(tile, rotate_indx)
+                
+        # for arrange tiles
+        tiles = np.random.shuffle(tiles)
+        
+        return tiles
+        
     def get_image(self, index):
         
         tiles =self.get_normal_tile(index)
         
         if self.phase == 'train':
             pass
-            #aug
+            #augumentation
             #tiles = tiles_aug;            
          
         return self.tile_concat(tiles)
@@ -103,6 +120,8 @@ class PANDADataset(Dataset):
         
         label = np.zeros(6).astype(np.float32)    
         label[self.labels[index]] = 1.0
+        
+        #label[: self.labels[index]] = 1.0
         
         #self.df.head()
         return label

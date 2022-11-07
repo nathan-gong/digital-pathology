@@ -15,11 +15,11 @@ from tqdm.notebook import tqdm
 import zipfile
 import numpy as np
 
-TRAIN = './Data/train_images/' #../input/prostate-cancer-grade-assessment/train_images/'
-MASKS = './Data/train_label_masks/'# '../input/prostate-cancer-grade-assessment/train_label_masks/'
-OUT_TRAIN = 'train.zip'
-OUT_MASKS = 'masks.zip'
-sz = 128
+TRAIN = '/work/digital-pathology/dataset/train_images/'
+MASKS = '/work/digital-pathology/dataset/train_label_masks/'
+OUT_TRAIN = '/work/digital-pathology/dataset/train.zip'
+OUT_MASKS = '/work/digital-pathology/dataset/masks.zip'
+sz = 256
 N = 16
 
 # set up logging
@@ -30,6 +30,12 @@ logging.basicConfig(
     datefmt=datetime.utcnow().astimezone().replace(
         microsecond=0).isoformat(),
     level=logging.DEBUG)
+
+PATH = 'work/digital-pathology/dataset/'
+SAVE_DIR = os.path.join(PATH,f"tile-images-{N}-{sz}/")
+is_Exist = os.path.exists(SAVE_DIR)
+if not is_Exist:
+    os.makedirs(SAVE_DIR)
 
 def tile(img, mask):
     result = []

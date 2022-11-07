@@ -22,7 +22,7 @@ from general import read_yaml
 
 
 PATH = '/work/digital-pathology/dataset/' #args.path
-yaml_name = 'sample.yaml'  
+yaml_name = '001.yaml'  
 
 '''
 train_images=[]
@@ -79,8 +79,8 @@ for k in range(1,k_fold):
     scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
 
     # load data
-    train_df = df.loc[df['kfold']==k].reset_index(drop=True)
-    valid_df = df.loc[df['kfold']!=k].reset_index(drop=True)
+    train_df = df.loc[df['kfold']!=k].reset_index(drop=True)
+    valid_df = df.loc[df['kfold']==k].reset_index(drop=True)
     
     train_loader = get_loader(train_df, "train", cfg)
     valid_loader = get_loader(valid_df, "valid", cfg)
@@ -91,12 +91,14 @@ for k in range(1,k_fold):
     for e in range(0,epoch):
         for batch_idx, (images, labels) in enumerate(train_loader):
             
+            #print(labels)
             model.train()
             # get the inputs; data is a list of [inputs, labels]
             images, labels = images.to(device), labels.to(device)
             
             optimizer.zero_grad()
-            mask, logits = model(images)
+            logits = model(images)
+            #print(logits)
             
             loss = lossfunction(logits, labels)
             
@@ -105,34 +107,36 @@ for k in range(1,k_fold):
             
             
             if batch_idx % log_interval == 0:              
-                print(f'Train Epoch: {epoch} [{(batch_idx+1) * len(images)}/{len(train_loader.dataset)} ({100. * (batch_idx+1) / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
+                print(f'Train Epoch: {e} [{(batch_idx+1) * len(images)}/{len(train_loader.dataset)} ({100. * (batch_idx+1) / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
              
                    
-            model.eval()
-            valid_loss = 0
-            correct = 0
-            with torch.no_grad():
-                for images, labels in valid_loader:
-                    images, labels = images.to(device), labels.to(device)
-                    
-                    mask, logits = model(images)
-                    valid_loss += lossfunction(logits, labels)
-                    
-                    pred = logits.argmax()
-                    label = labels.argmax()
-                    
-                    correct += torch.eq(pred, label).sum().item()
-                    
-                accuracy = correct/len(valid_loader.dataset)*100
-                valid_loss/=len(valid_loader.dataset)
-                print(f'\nValidation set: Average loss = {valid_loss}, Accuracy = {accuracy}%')
+        model.eval()
+        valid_loss = 0
+        correct = 0
+        with torch.no_grad():
+            for images, labels in valid_loader:
+                images, labels = images.to(device), labels.to(device)
                 
-            scheduler.step()
+                logits = model(images)
+                valid_loss += lossfunction(logits, labels)
+                
+                correct += (logits.argmax(dim=1) == labels.argmax(dim=1)).type(torch.float).sum().item()
+                #pred = logits.argmax(1)
+                #label = labels.argmax(dim=1)
+                
+                #correct += torch.eq(pred, label).sum().item()
+                #print(correct)
+                
+            accuracy = correct/len(valid_loader.dataset)*100
+            valid_loss/=len(valid_loader.dataset)
+            print(f'\nValidation set: Average loss = {valid_loss}, Accuracy = {accuracy}%')
+            
+        scheduler.step()
         
          
         
-        model_path = os.path.join(output_path,f'{yaml_name}_{model_name}_{k}.pth')
-        torch.save(model.state_dict(), model_path)
+    model_path = os.path.join(output_path,f'{yaml_name}_{model_name}_{k}.pth')
+    torch.save(model.state_dict(), model_path)
                 
                 
             

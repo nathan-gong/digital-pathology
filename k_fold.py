@@ -21,11 +21,12 @@ def k_fold(train_df, n_splits, path):
     for i, (train_index, val_index) in enumerate(kfold.split(X, labels)):
             train_df.loc[val_index, "kfold"] = i + 1
      
-    #out_path = 
-    train_df.to_csv(os.path.join(path,f'train-{n_splits}fold.csv'))
+    
+    return train_df#out_path = 
+    #train_df.to_csv(os.path.join(path,f'train-{n_splits}fold.csv'))
 
 
-   
+    
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
@@ -39,6 +40,12 @@ if __name__ == "__main__":
     n_splits = args.k
     file = args.file
     
-    train_df = pd.read_csv(os.path.join(path,f'{file}.csv'))
-
-    k_fold(train_df,n_splits, path)
+    df = pd.read_csv(os.path.join(path,f'{file}.csv'))
+    df = k_fold(df,n_splits, path)
+ 
+    test_df = df[df['kfold']==5]
+    test_df.to_csv(os.path.join(path,f'test.csv'),index=False)
+    
+    train_df = df[df['kfold']!=5]
+    train_df.to_csv(os.path.join(path,f'train-{n_splits}fold.csv'),index=False)
+    

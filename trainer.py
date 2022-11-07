@@ -12,17 +12,18 @@ import albumentations.pytorch as Albp
 
 from torch.utils.data import DataLoader
 import cv2
-
+import torch.nn as nn
 import segmentation_models_pytorch as smp
 from loss import FocalLoss
-
+from efficientnet import CustomEfficientNet,enetv2
 
 def transform(phase, cfg):
     assert phase in {"train", "valid"}
     
+    img_size = cfg.Data.dataset.img_size
     if phase == "train":
         transform = A.Compose([
-        A.Resize(1536, 1536, interpolation=cv2.INTER_NEAREST),
+        A.Resize(img_size, img_size, interpolation=cv2.INTER_NEAREST),
         A.HorizontalFlip(p=0.5),
         A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.05, rotate_limit=10, p=0.5),
         Albp.ToTensorV2()
@@ -31,7 +32,7 @@ def transform(phase, cfg):
         
     else:       
         transform = A.Compose([
-        A.Resize(1536, 1536, interpolation=cv2.INTER_NEAREST),
+        A.Resize(img_size, img_size, interpolation=cv2.INTER_NEAREST),
         Albp.ToTensorV2()
         ])
         
@@ -54,9 +55,9 @@ def get_loader(df, phase, cfg):
     
     return DataLoader(
         dataset,
-        batch_size=2,
+        batch_size=cfg.Data.dataloader.batch_size,
         shuffle=True if phase == "train" else False,
-        num_workers=0,
+        num_workers=cfg.Data.dataloader.num_workers,
         drop_last=True if phase == "train" else False,
        #worker_init_fn=worker_init_fn,
     )
@@ -83,14 +84,14 @@ def get_model(cfg):
     aux_params = aux_params
     )
     
-    
+    net = enetv2()
     return net
 
 
 def get_loss(cfg):
     
-    
-    loss = FocalLoss()
+    loss = nn.BCEWithLogitsLoss()
+    #loss = nn.CrossEntropyLoss()
     return loss
     
     
