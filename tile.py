@@ -128,7 +128,7 @@ def main():
             pass
 
         if img_name[-4:] == "tiff":
-            logging.debug(idx, img_name)
+            logging.debug('{} - {}'.format(idx, img_name))
                     
             tile(tile_size,tile_num,img_name,SAVE_DIR)
 
