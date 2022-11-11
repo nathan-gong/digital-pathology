@@ -24,6 +24,7 @@ import openslide
 from glob import glob
 import sys
 import argparse
+from datetime import datetime
 
 # set up logging
 logging.basicConfig(
@@ -120,7 +121,7 @@ def main():
     s = np.sqrt(tile_num)
 
     if s-int(s) !=0:
-        sys.exit(f'tile number must be square number') 
+        sys.exit(f'tile number must be square number')
     
     for idx, img_name in enumerate(all_train_images):
         image_start_idx = get_image_start_idx()

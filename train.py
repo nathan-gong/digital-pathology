@@ -15,7 +15,7 @@ import pandas as pd
 import torch
 import torch.optim as optim
 from torchsummary import summary
-
+from torch.utils.tensorboard import SummaryWriter
 
 from trainer import get_loader, get_model, get_loss
 from general import read_yaml
@@ -65,7 +65,10 @@ model_name = cfg.Model.base
 log_interval = 5
 epoch = cfg.Data.dataloader.epoch
 
-for k in range(1,k_fold):
+for k in range(1,k_fold-1):
+    
+    # tensorboard
+    writer = SummaryWriter(f'runs/{yaml_name[:-5]}-{k}')
     
     print(f' ==== {k} fold ====')
     # model setting
@@ -104,12 +107,12 @@ for k in range(1,k_fold):
             
             loss.backward()
             optimizer.step()
-            
-            
+                        
             if batch_idx % log_interval == 0:              
                 print(f'Train Epoch: {e} [{(batch_idx+1) * len(images)}/{len(train_loader.dataset)} ({100. * (batch_idx+1) / len(train_loader):.0f}%)]\tLoss: {loss.item():.6f}')
              
-                   
+        writer.add_scalar('Loss/Train', loss, e)
+             
         model.eval()
         valid_loss = 0
         correct = 0
@@ -130,6 +133,8 @@ for k in range(1,k_fold):
             accuracy = correct/len(valid_loader.dataset)*100
             valid_loss/=len(valid_loader.dataset)
             print(f'\nValidation set: Average loss = {valid_loss}, Accuracy = {accuracy}%')
+        
+            writer.add_scalar('Loss/Validation', valid_loss, e)
             
         scheduler.step()
         

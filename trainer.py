@@ -16,6 +16,9 @@ import torch.nn as nn
 import segmentation_models_pytorch as smp
 from loss import FocalLoss
 from efficientnet import CustomEfficientNet,enetv2
+#from transformers import BeitFeatureExtractor, BeitForImageClassification
+#from transformers import BeitConfig
+
 
 def transform(phase, cfg):
     assert phase in {"train", "valid"}
@@ -65,7 +68,11 @@ def get_loader(df, phase, cfg):
 
 def get_model(cfg):
     
-    
+    #Beit_cfg = BeitConfig(image_size = 256, num_labels = 6)
+    #net = BeitForImageClassification(Beit_cfg)
+
+
+    '''
     aux_params=dict(
         pooling='avg',             # one of 'avg', 'max'
         dropout=0.5,               # dropout ratio, default is None
@@ -83,8 +90,8 @@ def get_model(cfg):
     activation=None,
     aux_params = aux_params
     )
-    
-    net = enetv2()
+    '''
+    net = nn.DataParallel(enetv2())
     return net
 
 

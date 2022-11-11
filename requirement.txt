@@ -6,6 +6,8 @@ scikit-learn
 albumentations
 segmentation_models_pytorch
 addict
+tensorboard
+transformers
 
 
 
