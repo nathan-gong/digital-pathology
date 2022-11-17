@@ -95,7 +95,7 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
 def get_image_start_idx():
     with open('log.txt') as f:
         data = f.read().splitlines()
-        return data[:-1].split('-')[0].strip() if data else 0                    
+        return data[-1].split('-')[0].strip() if data else 0                    
                     
 def main():
     
