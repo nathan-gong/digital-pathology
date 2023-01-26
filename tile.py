@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Oct 21 16:39:48 2022
-
 @author: chuhsuanlin
 """
 
@@ -25,27 +24,23 @@ from glob import glob
 import sys
 import argparse
 from datetime import datetime
+from numba import jit, cuda
+from timeit import default_timer as timer 
+
 
 # set up logging
 logging.basicConfig(
     filename='log.txt',
-    filemode='w',
+    #filemode='w',
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt=datetime.utcnow().astimezone().replace(
         microsecond=0).isoformat(),
     level=logging.DEBUG)
 
 
+#@jit(target_backend='cuda',forceobj=True)  
 def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
     
-    
-    s = np.sqrt(tile_num)
-
-    if s-int(s) !=0:
-        sys.exit(f'tile number must be square number') 
-    
-    else:
-        s = int(s)
         
     img_path = os.path.join(PATH, "train_images/", img_name)
     img = openslide.OpenSlide(img_path)
@@ -65,6 +60,7 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
             
     
     selected_img = np.argsort(sum_array)
+    
     if plot:
         fig = plt.figure()
     
@@ -82,26 +78,30 @@ def tile(tile_size,tile_num,img_name,SAVE_DIR, plot=False):
         
         tile_path = os.path.join(SAVE_DIR,f'{img_name[:-5]}_{i}.jpg')
         cv2.imwrite(tile_path, img_patch)
-        
-         
+        #print('writing image', tile_path) 
+        '''
         if plot:
             ax = fig.add_subplot(s, s, i+1)  
             ax.imshow(img_patch)
             plt.axis('off')  
-        
+        '''
     img.close()
     
     
 def get_image_start_idx():
+    
+    if not os.path.exists('log.txt'):
+        return 0
+    
     with open('log.txt') as f:
         data = f.read().splitlines()
-        return data[-1].split('-')[0].strip() if data else 0                    
+        return data[-1].split(' ')[2].strip() if data else 0                    
                     
 def main():
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('-size', type=int, default = 256)
-    parser.add_argument('-num', type=int, default = 16)
+    parser.add_argument('-size', type=int, default = 196)
+    parser.add_argument('-num', type=int, default = 64)
     parser.add_argument('-path', type=str, default = '/work/digital-pathology/dataset/')
     args = parser.parse_args()       
     
@@ -122,20 +122,42 @@ def main():
 
     if s-int(s) !=0:
         sys.exit(f'tile number must be square number')
+    else:
+        s = int(s)
+    
+    #tile_single_image(tile_size, tile_num, SAVE_DIR)
+        
+    image_start_idx = get_image_start_idx()
+    print(image_start_idx)
     
     for idx, img_name in enumerate(all_train_images):
-        image_start_idx = get_image_start_idx()
-        if idx <= image_start_idx:
+        #print(idx,img_name)
+        if idx < int(image_start_idx):
+            print(idx)
             pass
 
-        if img_name[-4:] == "tiff":
-            logging.debug('{} - {}'.format(idx, img_name))
-                    
+        else:#if img_name[-4:] == "tiff":
+            print(img_name)
+            #logging.debug('{} - {}'.format(idx, img_name))
+            
+            #start = timer()       
             tile(tile_size,tile_num,img_name,SAVE_DIR)
+            #print("Time:", timer()-start)  
+            
+            logging.debug('{} - {}'.format(idx, img_name))
+    
+   
+def tile_single_image(tile_size, tile_num, SAVE_DIR):
+    
+    print('tiling...') 
+    #SAVE_DIR = os.path.join(PATH,f"tile-images-{tile_num}-{tile_size}/")
+    image_name = '0841bb278823ec53920d723881c7afd9.tiff'
+    tile(tile_size, tile_num, image_name, SAVE_DIR)
 
-       
+
+
+
     
 if __name__ == "__main__":
     main()
-
-    
+    #tile_single_image(196,64)
